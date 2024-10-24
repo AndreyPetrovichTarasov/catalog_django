@@ -36,8 +36,8 @@ class ArticleDetailView(DetailView):
 
         if obj.views_count == 100:
             email = EmailMessage(
-                subject='Сообщение о 100 просмотрах',
-                body='Поздравляю',
+                subject=f'Сообщение о 100 просмотрах: "{obj.title}"',
+                body=f'Поздравляю! Ваша статья "{obj.title}" набрала 100 просмотров!',
                 from_email='lacry@rambler.ru',
                 to=['lacryk@gmail.com'],
             )
