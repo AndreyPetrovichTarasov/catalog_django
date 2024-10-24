@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView, DeleteView, FormView
 from catalog.models import Product
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from .templates.forms.forms import ContactForm
 
 
@@ -47,13 +47,21 @@ class ContactsView(FormView):
     def form_valid(self, form):
         name = form.cleaned_data['name']
         message = form.cleaned_data['message']
+        subject = f'Новое сообщение от {name}'
+        recipient_list = ['lacryk@gmail.com']
 
-        # send_mail(
-        #     subject=f'Новое сообщение от {name}',
-        #     message=message,
-        #     from_email='your_email@gmail.com',
-        #     recipient_list=['recipient_email@example.com'],
-        # )
+        email = EmailMessage(
+            subject=subject,
+            body=message,
+            from_email='lacry@rambler.ru',
+            to=recipient_list,
+        )
+
+        email.headers = {
+            'Reply-To': 'lacry@rambler.ru',
+        }
+
+        email.send(fail_silently=False)
 
         messages.success(self.request, f'Спасибо, {name}! Ваше сообщение "{message}" получено.')  # Добавляем сообщение об успехе
         return super().form_valid(form)  # Вызовем метод родителя для перенаправления на success_url

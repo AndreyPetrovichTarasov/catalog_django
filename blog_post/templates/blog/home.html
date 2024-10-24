@@ -1,0 +1,27 @@
+{% extends 'base_home.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 d-flex">
+        {% for article in articles %}
+        <div class="col">
+          <div class="card shadow-sm w-100">
+            <img src="{{ article.preview_image | media_filter }}" class="img-fluid" style="height: 12rem; object-fit: cover;">
+            <div class="card-body">
+              <p class="card-text">{{ article.title }}</p>
+              <p class="card-text">Описание: {{ article.content|truncatechars:100 }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                 <a class="btn btn-primary" href="{% url 'blog:article_detail' article.pk %}" role="button">Почитать</a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

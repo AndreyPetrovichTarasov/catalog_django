@@ -1,0 +1,32 @@
+{% extends 'base_blog.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Добавить новую статью</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="id_title" class="form-label">Название</label>
+        {{ form.title|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_content" class="form-label">Контент</label>
+        {{ form.content|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_preview_image" class="form-label">Изображение превью</label>
+        {{ form.preview_image|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_is_published" class="form-label">Опубликовано</label>
+        {{ form.is_published|add_class:"form-check-input" }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+</div>
+{% endblock %}

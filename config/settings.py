@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'blog_post',
 ]
 
 MIDDLEWARE = [
@@ -97,8 +98,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'lacryk@gmail.com'
-EMAIL_HOST_PASSWORD = 'password'
+EMAIL_HOST = 'smtp.rambler.ru'
+EMAIL_PORT = 465  # Для SSL
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'lacry@rambler.ru'  # Ваш email на Rambler
+EMAIL_HOST_PASSWORD = 'sword9000'  # Ваш пароль
+DEFAULT_FROM_EMAIL = 'lacry@rambler.ru'
