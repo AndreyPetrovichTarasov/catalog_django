@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.DO_NOTHING,
                         related_name="students",
-                        to="catalog.category",
+                        to="blog.category",
                     ),
                 ),
             ],

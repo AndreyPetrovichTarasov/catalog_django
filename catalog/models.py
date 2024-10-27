@@ -2,6 +2,9 @@ from django.db import models
 
 
 class Category(models.Model):
+    """
+    Определение модели Категории
+    """
     name = models.CharField(max_length=100, verbose_name="Наименование категории")
     description = models.TextField(verbose_name="Описание категории")
 
@@ -15,6 +18,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """
+    Определение модели товара
+    """
     name = models.CharField(
         max_length=150,
         verbose_name="Наименование продукта",

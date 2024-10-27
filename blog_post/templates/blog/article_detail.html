@@ -1,0 +1,26 @@
+{% extends 'base_blog.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12">
+                <div class="card shadow-sm w-100">
+                    <img src="{{ article.preview_image | media_filter }}" class="img-fluid" style="height: 400px; object-fit: cover; width: 100%;">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">{{ article.title }}</h1>
+                        <p class="card-text">{{ article.content }}</p>
+                        <p class="card-text text-muted">Опубликовано: {{ article.created_at|date:"d M Y" }}</p>
+                        <p class="card-text text-muted">Просмотров: {{ article.views_count }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="btn btn-primary" href="{% url 'blog:home' %}" role="button">Обратно к списку</a>
+                            <a class="btn btn-primary" href="{% url 'blog:article_update' article.pk %}" role="button">Изменить статью</a>
+                            <a class="btn btn-danger" href="{% url 'blog:article_delete' article.pk %}" role="button">Удалить статью</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
