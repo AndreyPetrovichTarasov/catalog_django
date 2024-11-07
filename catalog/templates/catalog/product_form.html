@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load blog_tags %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">{% if object %}Редактирование товара{% else %}Добавить новый товар{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Отображение полей формы -->
+        <button type="submit">Сохранить</button>
+        <a class="btn btn-secondary" href="{% url 'catalog:home' %}" role="button">Отмена</a>
+    </form>
+</div>
+{% endblock %}

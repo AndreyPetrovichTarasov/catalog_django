@@ -5,6 +5,7 @@ class BlogPost(models.Model):
     """
     Определение полей модели
     """
+    objects: models.Manager = models.Manager()
     title = models.CharField(max_length=200)
     content = models.TextField()
     preview_image = models.ImageField(upload_to='blog_previews/', null=True, blank=True)

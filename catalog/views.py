@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, DeleteView, FormView
 from catalog.models import Product
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from .templates.forms.forms import ContactForm
+from .templates.forms.forms import ContactForm, ProductForm
 
 
 class ProductListView(ListView):
@@ -15,15 +15,18 @@ class ProductListView(ListView):
     template_name = 'catalog/home.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        return Product.objects.filter(is_active=True)
+
 
 class ProductCreateView(CreateView):
     """
     Представление создания товара
     """
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:home')
 
 
 class ProductDetailView(DetailView):
@@ -40,9 +43,9 @@ class ProductUpdateView(UpdateView):
     Представление редактирования товара
     """
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:home')
 
 
 class ProductDeleteView(DeleteView):
@@ -51,7 +54,7 @@ class ProductDeleteView(DeleteView):
     """
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:home')
 
 
 class ContactsView(FormView):
