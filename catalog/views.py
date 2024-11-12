@@ -5,6 +5,7 @@ from catalog.models import Product
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from catalog.forms.forms import ContactForm, ProductForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProductListView(ListView):
@@ -19,7 +20,7 @@ class ProductListView(ListView):
         return Product.objects.filter(is_active=True)
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """
     Представление создания товара
     """
@@ -29,7 +30,7 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('catalog:home')
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     """
     Представление страницы товара
     """
@@ -38,7 +39,7 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
     Представление редактирования товара
     """
@@ -48,7 +49,7 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('catalog:home')
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """
     Представление удаления товара
     """

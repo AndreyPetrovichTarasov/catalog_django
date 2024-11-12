@@ -1,4 +1,6 @@
 import os
+
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -21,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog',
     'blog_post',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -95,12 +98,29 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+#
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.rambler.ru'
+# EMAIL_PORT = 465  # Для SSL
+# EMAIL_USE_SSL = True
+# EMAIL_HOST_USER = os.getenv('MY_EMAIL')  # Ваш email на Rambler
+# EMAIL_HOST_PASSWORD = os.getenv('MY_EMAIL_PASSWORD')  # Ваш пароль
+# DEFAULT_FROM_EMAIL = os.getenv('MY_EMAIL')
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_REDIRECT_URL = reverse_lazy('catalog:home')
+
+LOGIN_URL = 'users:login'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.rambler.ru'
-EMAIL_PORT = 465  # Для SSL
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = os.getenv('MY_EMAIL')  # Ваш email на Rambler
-EMAIL_HOST_PASSWORD = os.getenv('MY_EMAIL_PASSWORD')  # Ваш пароль
-DEFAULT_FROM_EMAIL = os.getenv('MY_EMAIL')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

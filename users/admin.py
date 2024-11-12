@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from users.models import CustomUser
+
+
+@admin.register(CustomUser)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('email', 'phone_number')
+    search_fields = ('email', 'phone_number')

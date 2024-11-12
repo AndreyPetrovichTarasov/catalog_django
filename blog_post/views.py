@@ -2,6 +2,7 @@ from django.core.mail import EmailMessage
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, DeleteView
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from blog_post.models import BlogPost
 
@@ -21,7 +22,7 @@ class ArticleListView(ListView):
         return BlogPost.objects.filter(is_published=True).order_by('-views_count')
 
 
-class ArticleCreateView(CreateView):
+class ArticleCreateView(LoginRequiredMixin, CreateView):
     """
     Представление создания статьи
     """
@@ -62,7 +63,7 @@ class ArticleDetailView(DetailView):
         return obj
 
 
-class ArticleUpdateView(UpdateView):
+class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     """
     Представление редактирования статьи
     """
@@ -78,7 +79,7 @@ class ArticleUpdateView(UpdateView):
         return reverse('blog:article_detail', kwargs={'pk': self.object.pk})
 
 
-class ArticleDeleteView(DeleteView):
+class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     """
     Представление удаления статьи
     """
