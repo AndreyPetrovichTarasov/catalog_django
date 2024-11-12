@@ -1,9 +1,11 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
-from .forms import CustomUserCreationForm
+from django.views.generic.edit import CreateView, UpdateView
+from .forms import CustomUserCreationForm, UserProfileForm
+from .models import CustomUser
 
 
 class RegisterView(CreateView):
@@ -28,3 +30,13 @@ class RegisterView(CreateView):
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'
     success_url = reverse_lazy('catalog:home')
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    form_class = UserProfileForm
+    template_name = 'users/edit_profile.html'
+    success_url = reverse_lazy('catalog:home')  # Перенаправление после успешного сохранения
+
+    def get_object(self, queryset=None):
+        return self.request.user
