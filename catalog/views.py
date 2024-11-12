@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, DeleteView, FormView
 from catalog.models import Product
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from .templates.forms.forms import ContactForm, ProductForm
+from catalog.forms.forms import ContactForm, ProductForm
 
 
 class ProductListView(ListView):
