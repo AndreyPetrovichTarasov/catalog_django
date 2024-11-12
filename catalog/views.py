@@ -78,12 +78,12 @@ class ContactsView(FormView):
         email = EmailMessage(
             subject=subject,
             body=message,
-            from_email='lacry@rambler.ru',
+            from_email='lacryk@yandex.ru',
             to=recipient_list,
         )
 
         email.headers = {
-            'Reply-To': 'lacry@rambler.ru',
+            'Reply-To': 'lacryk@yandex.ru',
         }
 
         email.send(fail_silently=False)
