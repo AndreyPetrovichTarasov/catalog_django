@@ -4,7 +4,8 @@ from django.views.generic import ListView, DetailView, DeleteView, FormView
 from catalog.models import Product
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from .templates.forms.forms import ContactForm
+from catalog.forms.forms import ContactForm, ProductForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProductListView(ListView):
@@ -15,18 +16,21 @@ class ProductListView(ListView):
     template_name = 'catalog/home.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        return Product.objects.filter(is_active=True)
 
-class ProductCreateView(CreateView):
+
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """
     Представление создания товара
     """
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:home')
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     """
     Представление страницы товара
     """
@@ -35,23 +39,23 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
     Представление редактирования товара
     """
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:home')
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """
     Представление удаления товара
     """
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:home')
 
 
 class ContactsView(FormView):
@@ -74,12 +78,12 @@ class ContactsView(FormView):
         email = EmailMessage(
             subject=subject,
             body=message,
-            from_email='lacry@rambler.ru',
+            from_email='lacryk@yandex.ru',
             to=recipient_list,
         )
 
         email.headers = {
-            'Reply-To': 'lacry@rambler.ru',
+            'Reply-To': 'lacryk@yandex.ru',
         }
 
         email.send(fail_silently=False)
