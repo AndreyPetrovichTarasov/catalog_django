@@ -190,14 +190,17 @@
                 <h1 class="fw-light">Мир инструментов - Django Store</h1>
                 <nav>
                     {% if user.is_authenticated %}
-                    <h2 class="fw-light">Добро пожаловать, {{ user.username }}!</h2>
+                    <h2 class="fw-light">Добро пожаловать, {{ user.first_name }}!</h2>
                     {% else %}
                     <h2 class="fw-light">Добро пожаловать на сайт!</h2>
                     {% endif %}
                 </nav>
                 <p>
+                    {% if perms.product.can_unpublish_product and perms.product.can_delete_product or user == product.owner %}
                     <a href="{% url 'catalog:product_create' %}" class="btn btn-primary my-2">Добавить товар</a>
+                    {% endif %}
                     <a href="{% url 'catalog:home' %}" class="btn btn-primary my-2">К списку товаров</a>
+
                 </p>
             </div>
         </div>

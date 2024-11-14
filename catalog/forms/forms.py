@@ -17,7 +17,7 @@ class ContactForm(forms.Form):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['name', 'descriptions', 'image', 'category', 'price', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,3 +78,9 @@ class ProductForm(forms.ModelForm):
                 raise forms.ValidationError('Размер файла не должен превышать 5 МБ.')
 
         return image
+
+
+class ProductModeratorForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('is_active', )

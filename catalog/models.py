@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -35,9 +36,15 @@ class Product(models.Model):
     )
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_active = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name="Активен",
         help_text="Укажите, доступен ли продукт для продажи."
+    )
+    owner = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="products",
+        verbose_name="Владелец"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,3 +56,6 @@ class Product(models.Model):
         verbose_name = "продукт"
         verbose_name_plural = "продукты"
         ordering = ["name", "category", "price"]
+        permissions = [
+            ('can_unpublish_product', 'Can unpublish product')
+        ]

@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from blog_post.models import BlogPost
+from blog_post.mixins import ContentManagerRequiredMixin
 
 
 class ArticleListView(ListView):
@@ -22,7 +23,7 @@ class ArticleListView(ListView):
         return BlogPost.objects.filter(is_published=True).order_by('-views_count')
 
 
-class ArticleCreateView(LoginRequiredMixin, CreateView):
+class ArticleCreateView(LoginRequiredMixin, ContentManagerRequiredMixin, CreateView):
     """
     Представление создания статьи
     """
@@ -63,7 +64,7 @@ class ArticleDetailView(DetailView):
         return obj
 
 
-class ArticleUpdateView(LoginRequiredMixin, UpdateView):
+class ArticleUpdateView(LoginRequiredMixin, ContentManagerRequiredMixin, UpdateView):
     """
     Представление редактирования статьи
     """
@@ -79,7 +80,7 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('blog:article_detail', kwargs={'pk': self.object.pk})
 
 
-class ArticleDeleteView(LoginRequiredMixin, DeleteView):
+class ArticleDeleteView(LoginRequiredMixin, ContentManagerRequiredMixin, DeleteView):
     """
     Представление удаления статьи
     """
