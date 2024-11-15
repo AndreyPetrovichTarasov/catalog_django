@@ -173,7 +173,9 @@
         <h1 class="fw-light">Мир инструментов - Django Store</h1>
         <p class="lead text-body-secondary">Это блог нашего сайта. Здесь вы найдете интересные статьи о строительстве и не только.</p>
         <p>
+          {% if perms.article.can_create_article and perms.article.can_update_article and perms.article.can_delete_article %}
           <a href="{% url 'blog:article_create' %}" class="btn btn-primary my-2">Добавить статью</a>
+          {% endif %}
         </p>
       </div>
     </div>

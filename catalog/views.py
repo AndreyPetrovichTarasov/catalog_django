@@ -4,8 +4,9 @@ from django.views.generic import ListView, DetailView, DeleteView, FormView
 from catalog.models import Product
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from catalog.forms.forms import ContactForm, ProductForm
+from catalog.forms.forms import ContactForm, ProductForm, ProductModeratorForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from catalog.mixins import OwnerOrModeratorRequiredMixin
 
 
 class ProductListView(ListView):
@@ -29,6 +30,11 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:home')
 
+    def form_valid(self, form):
+        # Привязываем текущего пользователя к полю owner
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """
@@ -39,7 +45,7 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'product'
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, OwnerOrModeratorRequiredMixin, UpdateView):
     """
     Представление редактирования товара
     """
@@ -48,8 +54,15 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:home')
 
+    def get_form_class(self):
+        user = self.request.user
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+        if user.groups.filter(name='moderators').exists():
+            return ProductModeratorForm
+        return ProductForm
+
+
+class ProductDeleteView(LoginRequiredMixin, OwnerOrModeratorRequiredMixin, DeleteView):
     """
     Представление удаления товара
     """

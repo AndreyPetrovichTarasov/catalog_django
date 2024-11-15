@@ -14,8 +14,10 @@
                         <p class="card-text text-muted">Просмотров: {{ article.views_count }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <a class="btn btn-primary" href="{% url 'blog:home' %}" role="button">Обратно к списку</a>
+                            {% if perms.article.can_create_article and perms.article.can_update_article and perms.article.can_delete_article %}
                             <a class="btn btn-primary" href="{% url 'blog:article_update' article.pk %}" role="button">Изменить статью</a>
                             <a class="btn btn-danger" href="{% url 'blog:article_delete' article.pk %}" role="button">Удалить статью</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
