@@ -1,6 +1,5 @@
 import os
 
-from django.http import request
 from django.urls import reverse_lazy
 from dotenv import load_dotenv
 from pathlib import Path
@@ -50,6 +49,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'catalog.context_processors.categories',
             ],
         },
     },
@@ -83,6 +83,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHE_ENABLED = True
+if CACHE_ENABLED:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379/1',
+        }
+    }
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
@@ -98,16 +107,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-#
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.rambler.ru'
-# EMAIL_PORT = 465  # Для SSL
-# EMAIL_USE_SSL = True
-# EMAIL_HOST_USER = os.getenv('MY_EMAIL')  # Ваш email на Rambler
-# EMAIL_HOST_PASSWORD = os.getenv('MY_EMAIL_PASSWORD')  # Ваш пароль
-# DEFAULT_FROM_EMAIL = os.getenv('MY_EMAIL')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

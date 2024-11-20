@@ -1,12 +1,17 @@
+from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView, DeleteView, FormView
-from catalog.models import Product
+from catalog.models import Product, Category
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from catalog.forms.forms import ContactForm, ProductForm, ProductModeratorForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from catalog.mixins import OwnerOrModeratorRequiredMixin
+from catalog.services import get_products_by_category
 
 
 class ProductListView(ListView):
@@ -18,7 +23,22 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        return Product.objects.filter(is_active=True)
+        """
+        Переопределение метода с использованием кеширования.
+        """
+        cache_key = 'product_list'  # Уникальный ключ для кеша
+        queryset = cache.get(cache_key)  # Попытка получить данные из кеша
+
+        if not queryset:  # Если данные отсутствуют в кеше
+            queryset = Product.objects.filter(is_active=True)  # Выполняем запрос
+            cache.set(cache_key, queryset, timeout=60 * 15)  # Сохраняем в кеш на 15 минут
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Добавляем категории в контекст
+        return context
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -36,6 +56,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """
     Представление страницы товара
@@ -109,3 +130,25 @@ class ContactsView(FormView):
         Если форма недействительна, просто отобразим шаблон с ошибками
         """
         return super().form_invalid(form)
+
+
+class ProductsByCategoryView(ListView):
+    """
+    Представление для отображения продуктов в определенной категории
+    """
+    template_name = 'catalog/products_by_category.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        category_id = self.kwargs['category_id']
+        category = get_object_or_404(Category, id=category_id)
+        return get_products_by_category(category)
+
+    def get_context_data(self, **kwargs):
+        """
+        Добавление категории в контекст для отображения на странице.
+        """
+        context = super().get_context_data(**kwargs)
+        category_id = self.kwargs['category_id']
+        context['category'] = get_object_or_404(Category, id=category_id)
+        return context
